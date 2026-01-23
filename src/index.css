@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --range-bg: #fcfcfc;
+}
+
+.dark {
+  --range-bg: #030712;
+}
+
+body {
+  @apply bg-range-bg text-slate-900 dark:text-slate-100 transition-colors duration-300 antialiased;
+  margin: 0;
+  min-height: 100vh;
+}
+
+.glass {
+  @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-slate-200 dark:border-slate-800/50;
+}
+
+pre {
+  @apply font-mono text-sm p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 overflow-x-auto;
+}
+
+.gradient-bg {
+  @apply bg-gradient-to-br from-range-primary/5 to-range-secondary/5;
+}
