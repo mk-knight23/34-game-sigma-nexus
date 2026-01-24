@@ -4,10 +4,22 @@
 
 :root {
   --range-bg: #fcfcfc;
+  --range-primary: #10b981;
+  color-scheme: light;
 }
 
 .dark {
   --range-bg: #030712;
+  color-scheme: dark;
+}
+
+.light {
+  --range-bg: #fcfcfc;
+  color-scheme: light;
+}
+
+html {
+  background-color: var(--range-bg);
 }
 
 body {
@@ -26,4 +38,8 @@ pre {
 
 .gradient-bg {
   @apply bg-gradient-to-br from-range-primary/5 to-range-secondary/5;
+}
+
+kbd {
+  @apply px-2 py-1 text-xs font-mono bg-slate-200 dark:bg-slate-700 rounded border border-slate-300 dark:border-slate-600;
 }

@@ -1,24 +1,26 @@
 import { motion } from 'framer-motion'
-import { useRangeStore } from '@/stores/rangeStore'
-import { 
-  Activity, 
-  Moon, 
-  Sun, 
+import { useSettingsStore } from '@/stores/settings'
+import {
+  Activity,
+  Moon,
+  Sun,
   Github,
   TrendingUp,
   Grid,
   Zap,
-  BarChart3
+  BarChart3,
+  Settings as SettingsIcon,
 } from 'lucide-react'
 import { RangeCalculator } from './components/RangeCalculator'
+import { SettingsPanel } from './components/SettingsPanel'
 
 export default function App() {
-  const { isDarkMode, toggleDarkMode } = useRangeStore()
+  const { isDarkMode, toggleDarkMode, toggleHelp } = useSettingsStore()
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'dark' : ''}`}>
+      <SettingsPanel onClose={() => toggleHelp()} />
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Navigation */}
         <nav className="flex justify-between items-center mb-24">
           <div className="flex items-center gap-3">
             <div className="bg-range-primary p-2.5 rounded-2xl shadow-lg shadow-range-primary/30">
@@ -30,14 +32,22 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-2">
-            <button 
-              onClick={toggleDarkMode}
+            <button
+              onClick={() => toggleHelp()}
+              className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-range-primary transition-all"
+            >
+              <SettingsIcon size={20} />
+            </button>
+            <button
+              onClick={() => { toggleDarkMode(); useSettingsStore.getState().applyTheme() }}
               className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-range-primary transition-all"
             >
               {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
-            <a 
+            <a
               href="https://github.com/mk-knight23/40-Range-Sum-Calculator"
+              target="_blank"
+              rel="noopener noreferrer"
               className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-range-primary transition-all"
             >
               <Github size={20} />
@@ -45,7 +55,6 @@ export default function App() {
           </div>
         </nav>
 
-        {/* Hero Section */}
         <header className="text-center mb-24 space-y-6">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -65,12 +74,10 @@ export default function App() {
           </motion.div>
         </header>
 
-        {/* Main Interface */}
         <main>
           <RangeCalculator />
         </main>
 
-        {/* Feature Grid */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-48">
           {[
             { icon: <Activity className="text-range-primary" />, title: 'Real-time Stats', desc: 'Instant calculation of sum, average, variance and standard deviation.' },
@@ -87,18 +94,17 @@ export default function App() {
           ))}
         </section>
 
-        {/* Footer */}
         <footer className="mt-48 pb-12 border-t border-slate-200 dark:border-slate-800 pt-16 flex flex-col md:flex-row justify-between items-center gap-8">
-           <div className="flex items-center gap-2">
-              <Zap className="text-range-primary w-5 h-5" />
-              <span className="font-display font-black uppercase text-sm tracking-widest text-slate-500">RangeSync v2.0</span>
-           </div>
-           <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-slate-400">
-              <a href="#" className="hover:text-range-primary transition-colors">Documentation</a>
-              <a href="#" className="hover:text-range-primary transition-colors">Open Source</a>
-              <a href="#" className="hover:text-range-primary transition-colors">Privacy</a>
-           </div>
-           <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">&copy; 2026 MK-MATHLAB. ALL RIGHTS RESERVED.</p>
+          <div className="flex items-center gap-2">
+            <Zap className="text-range-primary w-5 h-5" />
+            <span className="font-display font-black uppercase text-sm tracking-widest text-slate-500">RangeSync v1.0.0</span>
+          </div>
+          <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-slate-400">
+            <a href="#" className="hover:text-range-primary transition-colors">Documentation</a>
+            <a href="#" className="hover:text-range-primary transition-colors">Open Source</a>
+            <a href="#" className="hover:text-range-primary transition-colors">Privacy</a>
+          </div>
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">&copy; 2026 MK-MATHLAB. ALL RIGHTS RESERVED.</p>
         </footer>
       </div>
     </div>
