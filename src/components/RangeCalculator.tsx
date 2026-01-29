@@ -1,11 +1,18 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Settings as SettingsIcon, 
-  History, 
+import {
+  Settings as SettingsIcon,
+  History,
   Info,
   Zap,
-  Copy
+  Copy,
+  Check,
+  AlertTriangle,
+  Bookmark,
+  Sparkles,
+  Flame,
+  Trophy,
+  Keyboard
 } from 'lucide-react'
 import { 
   BarChart, 
@@ -20,10 +27,79 @@ import {
 import { useRangeStore } from '@/stores/rangeStore'
 import { calculateRangeStats, LANGUAGES } from '@/utils/mathUtils'
 
+// Quick preset ranges for common calculations
+const PRESETS = [
+  { name: '1 to 100', start: 1, end: 100, step: 1, description: 'Sum of first 100 natural numbers' },
+  { name: '1 to 1000', start: 1, end: 1000, step: 1, description: 'Sum of first 1000 natural numbers' },
+  { name: 'Even Numbers', start: 2, end: 100, step: 2, description: 'Sum of even numbers 2-100' },
+  { name: 'Odd Numbers', start: 1, end: 99, step: 2, description: 'Sum of odd numbers 1-99' },
+  { name: 'Countdown', start: 10, end: 1, step: -1, description: 'Countdown from 10 to 1' },
+  { name: 'Decimals', start: 0, end: 1, step: 0.1, description: 'Decimals from 0 to 1' }
+]
+
+// Simple syntax highlighting for code snippets
+function highlightSyntax(code: string): string {
+  let html = code
+
+  // Escape HTML first
+  html = html
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+
+  // Keywords
+  const keywords = ['const', 'let', 'var', 'function', 'return', 'if', 'else', 'for', 'while', 'def', 'class', 'import', 'from', 'public', 'static', 'int', 'void']
+  keywords.forEach(kw => {
+    const regex = new RegExp(`\\b(${kw})\\b`, 'g')
+    html = html.replace(regex, '<span class="text-purple-500">$1</span>')
+  })
+
+  // Built-in functions and methods
+  const builtins = ['Math.floor', 'Math.sqrt', 'Math.pow', 'Math.abs', 'sum', 'range', 'print', 'console.log', 'len']
+  builtins.forEach(bi => {
+    const regex = new RegExp(`\\b(${bi.replace('.', '\\.')})\\b`, 'g')
+    html = html.replace(regex, '<span class="text-blue-500">$1</span>')
+  })
+
+  // Numbers
+  html = html.replace(/\b(\d+\.?\d*)\b/g, '<span class="text-orange-500">$1</span>')
+
+  // Strings
+  html = html.replace(/'([^']*)'/g, '<span class="text-green-600">\'$1\'</span>')
+  html = html.replace(/"([^"]*)"/g, '<span class="text-green-600">"$1"</span>')
+
+  // Comments
+  html = html.replace(/(\/\/.*)/g, '<span class="text-slate-400">$1</span>')
+  html = html.replace(/(#.*)/g, '<span class="text-slate-400">$1</span>')
+
+  return html
+}
+
 export function RangeCalculator() {
   const { start, end, step, setRange, addHistory, history, clearHistory } = useRangeStore()
   const [localRange, setLocalRange] = useState({ start, end, step })
   const [activeTab, setActiveTab] = useState<'visual' | 'code'>('visual')
+  const [copiedLang, setCopiedLang] = useState<string | null>(null)
+  const [warning, setWarning] = useState<string | null>(null)
+  
+  // V2: Session engagement tracking
+  const [streak, setStreak] = useState(0)
+  const [sessionBest, setSessionBest] = useState(0)
+  const [showStreakAnimation, setShowStreakAnimation] = useState(false)
+  const [keyboardHint, setKeyboardHint] = useState(true)
+
+  // Load session best from storage
+  useEffect(() => {
+    const saved = sessionStorage.getItem('rangeSync_best')
+    if (saved) setSessionBest(parseInt(saved, 10))
+  }, [])
+
+  // Hide keyboard hint after first interaction
+  useEffect(() => {
+    if (history.length > 0) {
+      setKeyboardHint(false)
+    }
+  }, [history.length])
 
   const stats = useMemo(() => {
     return calculateRangeStats(localRange.start, localRange.end, localRange.step)
@@ -50,9 +126,83 @@ export function RangeCalculator() {
     return data
   }, [localRange])
 
-  const handleApply = () => {
+  const handleApply = useCallback(() => {
+    // Clear previous warning
+    setWarning(null)
+
+    // Validate range size
+    const estimatedCount = Math.abs(Math.floor((localRange.end - localRange.start) / localRange.step)) + 1
+    const MAX_SAFE_COUNT = 1000000
+
+    if (estimatedCount > MAX_SAFE_COUNT) {
+      setWarning(`This range contains approximately ${estimatedCount.toLocaleString()} numbers. Large ranges may cause performance issues. Consider using a larger step or smaller range.`)
+      return
+    }
+
+    // Validate step direction
+    if (localRange.start < localRange.end && localRange.step < 0) {
+      setWarning('Step value is negative but start < end. The loop will not execute.')
+      return
+    }
+
+    if (localRange.start > localRange.end && localRange.step > 0) {
+      setWarning('Step value is positive but start > end. The loop will not execute.')
+      return
+    }
+
+    // Warn about very small steps with large ranges
+    if (localRange.step < 0.001 && estimatedCount > 10000) {
+      setWarning(`Very small step (${localRange.step}) with large range may cause precision issues. Results may be inaccurate.`)
+      return
+    }
+
     setRange(localRange.start, localRange.end, localRange.step)
     addHistory(stats)
+    
+    // V2: Update streak on successful calculation
+    setStreak(prev => {
+      const newStreak = prev + 1
+      if (newStreak > sessionBest) {
+        setSessionBest(newStreak)
+        sessionStorage.setItem('rangeSync_best', newStreak.toString())
+      }
+      // Trigger animation for milestones
+      if (newStreak % 5 === 0) {
+        setShowStreakAnimation(true)
+        setTimeout(() => setShowStreakAnimation(false), 2000)
+      }
+      return newStreak
+    })
+  }, [localRange, stats, sessionBest, setRange, addHistory])
+
+  // Keyboard shortcuts for power users - defined after handleApply
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        handleApply()
+      }
+      if (e.key === 'Escape') {
+        setWarning(null)
+      }
+      if (e.key === '?' && !(e.target instanceof HTMLInputElement)) {
+        e.preventDefault()
+        setKeyboardHint(prev => !prev)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [handleApply])
+
+  const handleCopy = (code: string, langName: string) => {
+    navigator.clipboard.writeText(code)
+    setCopiedLang(langName)
+    setTimeout(() => setCopiedLang(null), 2000)
+  }
+
+  const handlePreset = (preset: typeof PRESETS[0]) => {
+    setLocalRange({ start: preset.start, end: preset.end, step: preset.step })
+    setWarning(null)
   }
 
   return (
@@ -96,12 +246,126 @@ export function RangeCalculator() {
             </div>
           </div>
 
-          <button 
+          <button
             onClick={handleApply}
-            className="w-full bg-range-primary hover:bg-range-primary/90 text-white font-black p-4 rounded-2xl shadow-lg shadow-range-primary/20 flex items-center justify-center gap-3 transition-all active:scale-95"
+            className="w-full bg-range-primary hover:bg-range-primary/90 text-white font-black p-4 rounded-2xl shadow-lg shadow-range-primary/20 flex items-center justify-center gap-3 transition-all active:scale-95 group relative"
           >
-            <Zap size={18} /> CALCULATE RANGE
+            <Zap size={18} className="group-hover:animate-pulse" /> 
+            CALCULATE RANGE
+            <span className="absolute right-4 text-[10px] opacity-50 font-medium hidden md:block">
+              ⌘↵
+            </span>
           </button>
+
+          {/* V2: Keyboard shortcuts hint - Accessibility improvement */}
+          <AnimatePresence>
+            {keyboardHint && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="bg-slate-100 dark:bg-slate-800/50 p-3 rounded-xl flex items-start gap-2"
+              >
+                <Keyboard size={14} className="text-slate-400 mt-0.5 shrink-0" />
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                  <span className="font-bold">Pro tip:</span> Press 
+                  <kbd className="px-1.5 py-0.5 bg-white dark:bg-slate-700 rounded text-[10px] font-mono mx-1">⌘</kbd>+
+                  <kbd className="px-1.5 py-0.5 bg-white dark:bg-slate-700 rounded text-[10px] font-mono">Enter</kbd> 
+                  to calculate. Press 
+                  <kbd className="px-1.5 py-0.5 bg-white dark:bg-slate-700 rounded text-[10px] font-mono mx-1">?</kbd> 
+                  for help.
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Warning Display */}
+          <AnimatePresence>
+            {warning && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 flex gap-3"
+              >
+                <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" size={18} />
+                <p className="text-sm text-amber-700 dark:text-amber-300 font-medium">{warning}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Quick Presets */}
+        <div className="glass p-6 rounded-[2.5rem] space-y-4">
+          <div className="flex items-center gap-2">
+            <Sparkles className="text-range-accent" size={16} />
+            <h3 className="font-display text-sm font-black uppercase text-slate-400 tracking-widest">Quick Presets</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {PRESETS.map(preset => (
+              <button
+                key={preset.name}
+                onClick={() => handlePreset(preset)}
+                className="p-3 bg-slate-50 dark:bg-slate-800/50 hover:bg-range-primary/10 rounded-xl text-left transition-all group"
+                title={preset.description}
+              >
+                <Bookmark size={12} className="text-range-primary mb-1 opacity-50 group-hover:opacity-100 transition-opacity" />
+                <p className="text-xs font-black text-slate-700 dark:text-slate-300">{preset.name}</p>
+                <p className="text-[10px] text-slate-400 font-mono">{preset.start} → {preset.end}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* V2: Session Stats - Human touch with streak tracking */}
+        <div className="glass p-6 rounded-[2.5rem] space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-display text-sm font-black flex items-center gap-2 uppercase tracking-widest text-slate-400">
+              <Flame className="w-4 h-4 text-orange-500" /> This Session
+            </h3>
+            {streak > 0 && (
+              <button 
+                onClick={() => setStreak(0)} 
+                className="text-[10px] text-slate-400 hover:text-slate-600 transition-colors"
+                title="Reset streak"
+              >
+                reset
+              </button>
+            )}
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-orange-50 dark:bg-orange-900/10 p-4 rounded-2xl text-center relative overflow-hidden">
+              <AnimatePresence>
+                {showStreakAnimation && (
+                  <motion.div
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1.2, opacity: 1 }}
+                    exit={{ scale: 1, opacity: 0 }}
+                    className="absolute inset-0 flex items-center justify-center bg-orange-500/10"
+                  >
+                    <Flame className="w-8 h-8 text-orange-500" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Current Streak</p>
+              <p className={`text-2xl font-black ${streak > 0 ? 'text-orange-500' : 'text-slate-300'}`}>
+                {streak}
+              </p>
+              {streak >= 10 && <span className="text-[8px] text-orange-500 font-bold uppercase">On fire!</span>}
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl text-center">
+              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center justify-center gap-1">
+                <Trophy size={10} /> Best
+              </p>
+              <p className="text-2xl font-black text-range-primary">{sessionBest}</p>
+              {sessionBest >= 20 && <span className="text-[8px] text-range-primary font-bold uppercase">Power user</span>}
+            </div>
+          </div>
+          {streak === 0 && history.length === 0 && (
+            <p className="text-[10px] text-slate-400 text-center italic">
+              Calculate to start your streak
+            </p>
+          )}
         </div>
 
         {/* History */}
@@ -111,7 +375,7 @@ export function RangeCalculator() {
               <History className="w-5 h-5 text-range-secondary" /> History
             </h3>
             {history.length > 0 && (
-              <button onClick={clearHistory} className="text-red-500 hover:underline text-[10px] font-black uppercase">Clear</button>
+              <button onClick={clearHistory} className="text-red-500 hover:underline text-[10px] font-black uppercase">Wipe</button>
             )}
           </div>
           <div className="space-y-3 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
@@ -121,7 +385,7 @@ export function RangeCalculator() {
                 <span className="text-xs font-black text-range-primary">∑ {h.stats.sum.toLocaleString()}</span>
               </div>
             ))}
-            {history.length === 0 && <p className="text-center text-slate-400 text-xs py-4 font-bold uppercase tracking-widest">No history yet</p>}
+            {history.length === 0 && <p className="text-center text-slate-400 text-xs py-4 font-bold uppercase tracking-widest">Calculations appear here</p>}
           </div>
         </div>
       </div>
@@ -222,9 +486,17 @@ export function RangeCalculator() {
                     <div key={lang.name} className="space-y-3">
                       <div className="flex items-center justify-between">
                         <h5 className="text-sm font-black uppercase text-slate-400 tracking-widest">{lang.name}</h5>
-                        <button className="text-range-secondary p-1 hover:bg-range-secondary/10 rounded transition-colors"><Copy size={14} /></button>
+                        <button
+                          onClick={() => handleCopy(lang.code(localRange.start, localRange.end, localRange.step), lang.name)}
+                          className="text-range-secondary p-1 hover:bg-range-secondary/10 rounded transition-colors"
+                          title="Copy code"
+                        >
+                          {copiedLang === lang.name ? <Check size={14} /> : <Copy size={14} />}
+                        </button>
                       </div>
-                      <pre><code>{lang.code(localRange.start, localRange.end)}</code></pre>
+                      <pre className="bg-slate-900 text-slate-100 p-4 rounded-xl overflow-x-auto text-xs leading-relaxed"><code dangerouslySetInnerHTML={{
+                        __html: highlightSyntax(lang.code(localRange.start, localRange.end, localRange.step))
+                      }} /></pre>
                     </div>
                   ))}
                 </motion.div>

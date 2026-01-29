@@ -91,3 +91,16 @@ MIT License - see [LICENSE](LICENSE) for details.
 ---
 
 **Live Demo:** [https://mk-knight23.github.io/40-Range-Sum-Calculator/](https://mk-knight23.github.io/40-Range-Sum-Calculator/)
+
+---
+
+## 📝 Design Notes (V2)
+
+### Intentional Quirk: The Streak Counter
+Most calculator tools are cold and transactional. I added a session streak counter that tracks consecutive calculations. Why? Because even boring tools can have personality. The streak serves no "business purpose"—it's just a small dopamine hit to make math feel a bit more fun. It resets when you refresh. Impermanent, like a good cup of coffee.
+
+### Tradeoff: Keyboard Shortcuts Over Mobile-First
+I added ⌘+Enter to calculate and ? for help. This prioritizes desktop power users over mobile thumb-typers. The tradeoff: mobile users don't get the "pro" experience. But honestly? This is a calculator for people who use keyboards. The mobile layout works fine; it just doesn't have shortcuts. Choose your user.
+
+### What I Chose NOT to Build
+No persistent cloud storage. Your history lives in localStorage and vanishes when you clear data. No accounts, no sync, no "save to cloud." The decision: this is a browser tool, not a database application. If you need permanent records, export to a real spreadsheet. This tool does one thing well: quick calculations that disappear when you're done.

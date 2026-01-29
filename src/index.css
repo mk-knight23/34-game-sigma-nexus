@@ -1,45 +1,42 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-range-bg: #fcfcfc;
+  --color-range-dark: #030712;
+  --color-range-primary: #10b981;
+  --color-range-secondary: #3b82f6;
+  --color-range-accent: #f59e0b;
+
+  --font-mono: "Fira Code", monospace;
+}
 
 :root {
   --range-bg: #fcfcfc;
-  --range-primary: #10b981;
-  color-scheme: light;
 }
 
 .dark {
   --range-bg: #030712;
-  color-scheme: dark;
-}
-
-.light {
-  --range-bg: #fcfcfc;
-  color-scheme: light;
 }
 
 html {
-  background-color: var(--range-bg);
+  @apply scroll-smooth;
 }
 
 body {
   @apply bg-range-bg text-slate-900 dark:text-slate-100 transition-colors duration-300 antialiased;
   margin: 0;
   min-height: 100vh;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
-.glass {
+@utility glass {
   @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-slate-200 dark:border-slate-800/50;
+}
+
+@utility gradient-bg {
+  @apply bg-gradient-to-br from-range-primary/5 to-range-secondary/5;
 }
 
 pre {
   @apply font-mono text-sm p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 overflow-x-auto;
-}
-
-.gradient-bg {
-  @apply bg-gradient-to-br from-range-primary/5 to-range-secondary/5;
-}
-
-kbd {
-  @apply px-2 py-1 text-xs font-mono bg-slate-200 dark:bg-slate-700 rounded border border-slate-300 dark:border-slate-600;
 }

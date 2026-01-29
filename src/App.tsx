@@ -104,7 +104,7 @@ export default function App() {
             <a href="#" className="hover:text-range-primary transition-colors">Open Source</a>
             <a href="#" className="hover:text-range-primary transition-colors">Privacy</a>
           </div>
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">&copy; 2026 MK-MATHLAB. ALL RIGHTS RESERVED.</p>
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">&copy; 2026 Made by MK — Built by Musharraf Kazi</p>
         </footer>
       </div>
     </div>
