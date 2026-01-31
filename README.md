@@ -107,3 +107,25 @@ I added ⌘+Enter to calculate and ? for help. This prioritizes desktop power us
 
 ### What I Chose NOT to Build
 No persistent cloud storage. Your history lives in localStorage and vanishes when you clear data. No accounts, no sync, no "save to cloud." The decision: this is a browser tool, not a database application. If you need permanent records, export to a real spreadsheet. This tool does one thing well: quick calculations that disappear when you're done.
+
+## 🎉 Additional Features (V3)
+
+Three practical enhancements for data utility:
+
+### CSV Export
+**Why added**: You calculate a range, get nice results, and then... what? Previously, copying required manual selection.
+
+**What changed**: Added a "Download CSV" button that exports the full calculation sequence to a CSV file. Includes range values, cumulative sum, and statistics. Opens in Excel/Google Sheets with one click.
+
+### Comparison Mode
+**Why added**: Sometimes you want to compare two ranges side-by-side—like "how does 1-100 compare to 101-200?"
+
+**What changed**: Added a comparison toggle that lets you calculate two ranges and view them together on a stacked bar chart. Good for understanding relative distributions.
+
+### Quick Presets
+**Why added**: Common ranges (1-100, 1-365 for days, 1-1000) require typing every time.
+
+**What changed**: Added preset buttons for frequently-used ranges. Click to populate, then adjust as needed. Small time-saver that adds up.
+
+### Intentionally Rejected: Advanced Functions
+I considered adding support for functions like sin(x), x², etc. Rejected because this tool is about *ranges*, not function plotting. Adding functions would make it a poor man's graphing calculator. Better to do one thing well (arithmetic sequences) than be mediocre at everything.
