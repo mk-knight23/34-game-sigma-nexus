@@ -1,8 +1,12 @@
 {
-  "name": "range-sum-calculator",
+  "name": "34-game-sigma-nexus",
   "private": true,
   "version": "2.0.0",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mk-knight23/34-game-sigma-nexus.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

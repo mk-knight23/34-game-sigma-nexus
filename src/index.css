@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-range-bg: #fcfcfc;
-  --color-range-dark: #030712;
-  --color-range-primary: #10b981;
-  --color-range-secondary: #3b82f6;
-  --color-range-accent: #f59e0b;
+  --color-sigma-bg: #0a0a0a;
+  --color-sigma-card: #171717;
+  --color-sigma-primary: #f59e0b;
+  --color-sigma-secondary: #d97706;
+  --color-sigma-accent: #6366f1;
 
   --font-mono: "Fira Code", monospace;
+  --font-display: "Orbitron", sans-serif;
 }
 
 :root {
@@ -23,20 +24,20 @@ html {
 }
 
 body {
-  @apply bg-range-bg text-slate-900 dark:text-slate-100 transition-colors duration-300 antialiased;
+  @apply bg-sigma-bg text-slate-100 antialiased;
   margin: 0;
   min-height: 100vh;
   font-family: 'Inter', system-ui, sans-serif;
 }
 
 @utility glass {
-  @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-slate-200 dark:border-slate-800/50;
+  @apply bg-sigma-card/80 backdrop-blur-md border border-white/10;
 }
 
 @utility gradient-bg {
-  @apply bg-gradient-to-br from-range-primary/5 to-range-secondary/5;
+  @apply bg-gradient-to-br from-sigma-primary/10 to-sigma-secondary/10;
 }
 
 pre {
-  @apply font-mono text-sm p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 overflow-x-auto;
+  @apply font-mono text-sm p-4 rounded-xl bg-sigma-card border border-white/5 overflow-x-auto;
 }

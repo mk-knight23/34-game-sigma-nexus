@@ -1,16 +1,23 @@
-# RangeSync - Range Statistics & Visualization Tool
+# 34-game-sigma-nexus
 
-A professional-grade application for calculating numerical range statistics and visualizing sequences. Built with React 18, TypeScript, and Recharts.
+<p align="center">
+  <img src="https://img.shields.io/badge/Version-2.0.0-F59E0B?style=for-the-badge" alt="Version">
+  <img src="https://img.shields.io/badge/Style-Sigma_Core-6366F1?style=for-the-badge" alt="Style">
+  <img src="https://img.shields.io/badge/Stack-React_Recharts-61DAFB?style=for-the-badge&logo=react" alt="Stack">
+</p>
 
-## Features
+## 🌐 The Quantum Analysis Engine
 
-- **Advanced Statistics** - Instant calculation of Sum, Average, Count, and Standard Deviation for any numerical range.
-- **Sequence Visualizer** - Interactive bar chart representation of your numerical data sequences.
-- **Custom Increments** - Support for fractional steps and descending ranges.
-- **Algorithm Snippets** - Real-time code generation for multiple programming languages (JS, Python, Java, C++).
-- **Persistent History** - Keep track of your previous calculations with local persistence.
-- **Professional UI** - Modern glassmorphism design with fluid animations.
-- **Dark/Light Mode** - Full support for system and manual theme toggling.
+**SIGMA_NEXUS** is a high-precision analytical tool for numerical sequences. It visualizes algorithmic summation protocols and provides real-time statistical telemetry for range-based datasets.
+
+## ⚡ Core Protocols
+
+| Module | Legacy (RangeSync) | Sigma Nexus (v2.0) |
+|:---|:---|:---|
+| **Engine** | Basic Summation | **Multi-Algorithm Analysis** |
+| **Visuals** | Simple Bars | **Interactive Data Matrix** |
+| **Telemetry** | Static | **Real-time Variance/Dev** |
+| **Interface** | Standard | **Gold/Black Glassmorphism** |
 
 ## Tech Stack
 
