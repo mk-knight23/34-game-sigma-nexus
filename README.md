@@ -99,8 +99,13 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ### Live Demo
 - GitHub Pages: <https://mk-knight23.github.io/40-Range-Sum-Calculator/>
-- Vercel: [Deploy your own](https://vercel.com/new)
-- Netlify: [Deploy your own](https://app.netlify.com/start)
+
+## 🎮 Live Demos
+
+| Platform | URL |
+|----------|-----|
+| **Vercel** | [34-game-sigma-nexus.vercel.app](https://34-game-sigma-nexus.vercel.app) |
+| **Render** | [three4-game-sigma-nexus.onrender.com](https://three4-game-sigma-nexus.onrender.com) |
 
 ---
 
