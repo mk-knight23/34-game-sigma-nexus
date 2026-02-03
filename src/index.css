@@ -41,3 +41,12 @@ body {
 pre {
   @apply font-mono text-sm p-4 rounded-xl bg-sigma-card border border-white/5 overflow-x-auto;
 }
+
+.nav-link {
+  @apply p-3 rounded-none bg-sigma-card border border-white/10 text-slate-500;
+  @apply hover:text-sigma-primary hover:border-sigma-primary/50 transition-all;
+}
+
+.nav-link.active {
+  @apply text-sigma-primary border-sigma-primary/50 shadow-[0_0_15px_#f59e0b30];
+}
