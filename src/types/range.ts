@@ -22,4 +22,24 @@ export interface RangeState {
   step: number
   isDarkMode: boolean
   history: RangeHistory[]
+  favorites: FavoriteRange[]
+  customFormulas: CustomFormula[]
+}
+
+export interface FavoriteRange {
+  id: string
+  name: string
+  start: number
+  end: number
+  step: number
+  createdAt: string
+}
+
+export interface CustomFormula {
+  id: string
+  name: string
+  formula: string
+  description: string
+  variables: { name: string; default: number }[]
+  createdAt: string
 }

@@ -122,22 +122,57 @@ No persistent cloud storage. Your history lives in localStorage and vanishes whe
 
 ## 🎉 Additional Features (V3)
 
-Three practical enhancements for data utility:
+Five major enhancements for advanced data utility:
 
-### CSV Export
-**Why added**: You calculate a range, get nice results, and then... what? Previously, copying required manual selection.
+### 1. Enhanced Visualization Graphs
+**Why added**: The original bar chart was basic and limited.
 
-**What changed**: Added a "Download CSV" button that exports the full calculation sequence to a CSV file. Includes range values, cumulative sum, and statistics. Opens in Excel/Google Sheets with one click.
+**What changed**: Upgraded to interactive Recharts with:
+- Hover tooltips showing exact values
+- Color-coded bars for better visual distinction
+- Responsive design that adapts to screen size
+- Smooth animations on data changes
 
-### Comparison Mode
-**Why added**: Sometimes you want to compare two ranges side-by-side—like "how does 1-100 compare to 101-200?"
+### 2. Favorites System
+**Why added**: Users frequently calculate the same ranges (e.g., 1-100, 1-365 for days).
 
-**What changed**: Added a comparison toggle that lets you calculate two ranges and view them together on a stacked bar chart. Good for understanding relative distributions.
+**What changed**: Added a favorites panel where you can:
+- Save any range configuration with a custom name
+- Quickly load saved ranges with one click
+- Manage up to 20 favorite ranges
+- Organize frequently-used calculations
 
-### Quick Presets
-**Why added**: Common ranges (1-100, 1-365 for days, 1-1000) require typing every time.
+### 3. Export to CSV/PDF
+**Why added**: Users need to save results for reports or analysis.
 
-**What changed**: Added preset buttons for frequently-used ranges. Click to populate, then adjust as needed. Small time-saver that adds up.
+**What changed**: Added comprehensive export options:
+- **CSV Export**: Download full calculation history as spreadsheet
+- **Print Report**: Generate beautifully formatted PDF reports
+- **Include History**: Export includes all recent calculations
+- **One-Click**: Single button to download or print
 
-### Intentionally Rejected: Advanced Functions
-I considered adding support for functions like sin(x), x², etc. Rejected because this tool is about *ranges*, not function plotting. Adding functions would make it a poor man's graphing calculator. Better to do one thing well (arithmetic sequences) than be mediocre at everything.
+### 4. Custom Formula Builder
+**Why added**: Power users want to apply custom mathematical operations.
+
+**What changed**: Added a formula editor that supports:
+- Create custom mathematical expressions
+- Define variables with default values
+- Test formulas before saving
+- Support for: sin, cos, tan, sqrt, abs, pow, PI, E
+- Save and reuse custom formulas
+
+### 5. Shareable Links
+**Why added**: Collaboration requires sharing configurations easily.
+
+**What changed**: Added share functionality:
+- Generate unique URLs for any range configuration
+- Copy link with one click
+- Anyone opening the link sees your exact settings
+- Perfect for sharing calculations with colleagues
+
+### Intentionally Rejected: Cloud Sync
+I considered adding cloud storage for favorites and history. Rejected because:
+- This is a privacy-focused tool—your calculations stay on your device
+- localStorage is sufficient for most use cases
+- Export to CSV covers the "backup" use case
+- No account overhead means instant access, no login friction

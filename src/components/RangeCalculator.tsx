@@ -12,7 +12,10 @@ import {
   Sparkles,
   Flame,
   Trophy,
-  Keyboard
+  Keyboard,
+  Star,
+  Share2,
+  FunctionSquare
 } from 'lucide-react'
 import { 
   BarChart, 
@@ -26,6 +29,10 @@ import {
 } from 'recharts'
 import { useRangeStore } from '@/stores/rangeStore'
 import { calculateRangeStats, LANGUAGES } from '@/utils/mathUtils'
+import { FavoritesPanel } from './FavoritesPanel'
+import { ExportSharePanel } from './ExportSharePanel'
+import { FormulaBuilder } from './FormulaBuilder'
+import { parseRangeFromURL } from '@/utils/exportUtils'
 
 // Quick preset ranges for common calculations
 const PRESETS = [
@@ -87,11 +94,19 @@ export function RangeCalculator() {
   const [sessionBest, setSessionBest] = useState(0)
   const [showStreakAnimation, setShowStreakAnimation] = useState(false)
   const [keyboardHint, setKeyboardHint] = useState(true)
+  const [activePanel, setActivePanel] = useState<'history' | 'favorites' | 'export' | 'formulas'>('history')
 
   // Load session best from storage
   useEffect(() => {
     const saved = sessionStorage.getItem('rangeSync_best')
     if (saved) setSessionBest(parseInt(saved, 10))
+    
+    // Check for shared link parameters
+    const sharedRange = parseRangeFromURL()
+    if (sharedRange) {
+      setLocalRange({ start: sharedRange.start, end: sharedRange.end, step: sharedRange.step })
+      setRange(sharedRange.start, sharedRange.end, sharedRange.step)
+    }
   }, [])
 
   // Hide keyboard hint after first interaction
@@ -368,24 +383,115 @@ export function RangeCalculator() {
           )}
         </div>
 
-        {/* History */}
-        <div className="glass p-8 rounded-[2.5rem] space-y-6 overflow-hidden">
-          <div className="flex items-center justify-between">
-            <h3 className="font-display text-lg font-black flex items-center gap-2">
-              <History className="w-5 h-5 text-range-secondary" /> History
-            </h3>
-            {history.length > 0 && (
-              <button onClick={clearHistory} className="text-red-500 hover:underline text-[10px] font-black uppercase">Wipe</button>
-            )}
+        {/* New Features Panel */}
+        <div className="glass p-6 rounded-[2.5rem] space-y-4 overflow-hidden">
+          {/* Panel Tabs */}
+          <div className="flex gap-1 bg-slate-100 dark:bg-slate-800/50 p-1 rounded-2xl">
+            {[
+              { id: 'history', icon: History, label: 'History' },
+              { id: 'favorites', icon: Star, label: 'Favorites' },
+              { id: 'export', icon: Share2, label: 'Export' },
+              { id: 'formulas', icon: FunctionSquare, label: 'Formulas' },
+            ].map((tab) => {
+              const Icon = tab.icon
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActivePanel(tab.id as any)}
+                  className={`
+                    flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all
+                    ${activePanel === tab.id
+                      ? 'bg-white dark:bg-slate-700 text-range-primary shadow-sm'
+                      : 'text-slate-400 hover:text-slate-600'
+                    }
+                  `}
+                >
+                  <Icon size={12} /> {tab.label}
+                </button>
+              )
+            })}
           </div>
-          <div className="space-y-3 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
-            {history.map(h => (
-              <div key={h.id} className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl flex items-center justify-between group">
-                <span className="text-xs font-mono font-bold text-slate-500">{h.stats.start} → {h.stats.end}</span>
-                <span className="text-xs font-black text-range-primary">∑ {h.stats.sum.toLocaleString()}</span>
-              </div>
-            ))}
-            {history.length === 0 && <p className="text-center text-slate-400 text-xs py-4 font-bold uppercase tracking-widest">Calculations appear here</p>}
+
+          {/* Panel Content */}
+          <div className="min-h-[200px]">
+            <AnimatePresence mode="wait">
+              {activePanel === 'history' && (
+                <motion.div
+                  key="history"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  className="space-y-3"
+                >
+                  <div className="flex items-center justify-between px-2">
+                    <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Recent Calculations</h4>
+                    {history.length > 0 && (
+                      <button onClick={clearHistory} className="text-red-500 hover:underline text-[9px] font-black uppercase">Clear All</button>
+                    )}
+                  </div>
+                  <div className="space-y-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
+                    {history.slice(0, 10).map(h => (
+                      <div key={h.id} className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl flex items-center justify-between group hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        <span className="text-xs font-mono font-bold text-slate-500">{h.stats.start} → {h.stats.end}</span>
+                        <span className="text-xs font-black text-range-primary">∑ {h.stats.sum.toLocaleString()}</span>
+                      </div>
+                    ))}
+                    {history.length === 0 && (
+                      <div className="text-center py-8">
+                        <History size={24} className="mx-auto mb-2 opacity-30 text-slate-400" />
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">No calculations yet</p>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+
+              {activePanel === 'favorites' && (
+                <motion.div
+                  key="favorites"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                >
+                  <FavoritesPanel
+                    currentStart={localRange.start}
+                    currentEnd={localRange.end}
+                    currentStep={localRange.step}
+                    onLoad={(start, end, step) => {
+                      setLocalRange({ start, end, step })
+                      setRange(start, end, step)
+                    }}
+                  />
+                </motion.div>
+              )}
+
+              {activePanel === 'export' && (
+                <motion.div
+                  key="export"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                >
+                  <ExportSharePanel
+                    stats={stats}
+                    currentStart={localRange.start}
+                    currentEnd={localRange.end}
+                    currentStep={localRange.step}
+                  />
+                </motion.div>
+              )}
+
+              {activePanel === 'formulas' && (
+                <motion.div
+                  key="formulas"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                >
+                  <FormulaBuilder />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
