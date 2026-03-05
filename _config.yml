@@ -1,15 +1,5 @@
-# GitHub Pages Configuration
 theme: jekyll-theme-cayman
-title: Analytics Gaming Dashboard
+title: game sigma nexus
 description: Documentation for 34-game-sigma-nexus
 baseurl: /34-game-sigma-nexus
 url: https://mk-knight23.github.io
-
-# Navigation
-nav:
-  - title: Home
-    url: /
-  - title: Architecture
-    url: /architecture/
-  - title: API
-    url: /api/
