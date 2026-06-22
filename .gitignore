@@ -32,3 +32,5 @@ _backup/
 # Claude temporary files
 .claude/
 .vercel
+node_modules
+dist
