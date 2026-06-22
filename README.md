@@ -1,108 +1,63 @@
-# 🚀 34-game-sigma-nexus (Collective Production Edition)
+# Sigma Nexus — Range-Sum Game & Trainer
 
-## 💎 Overview
-Fully production-grade implementation of 34-game-sigma-nexus, refactored by the **69-Agent Opencode Collective**.
+A browser game built around arithmetic range sums. Race a timer to add up a
+range of numbers, climb difficulty levels, chase streaks, and take on a daily
+challenge — or drop into the trainer to explore range statistics, visualize
+sequences, and export multi-language code.
 
-## 🛡️ Trust & Compliance
-- **CI/CD**: Automated GitHub Actions with Gitleaks security scans.
-- **Security**: Standardized [SECURITY.md](SECURITY.md) protocol.
-- **Design**: Opencode Premium Design Tokens integrated.
+## Modes
 
-## 🏁 48-Hour Roadmap
-1. Initialize infrastructure via `.github/workflows`.
-2. Set your secrets in GitHub Environment settings.
-3. Deploy to production via Vercel/Docker.
+- **Challenge (Guess the Sum)** — A range appears (e.g. `1 → 9, step 2`); type
+  its sum before the per-round timer runs out. Points scale with base value,
+  remaining time, and current streak. Difficulty climbs every few correct
+  answers (longer ranges, larger steps, negatives, tighter clock). A run is 10
+  rounds; session-best and streak are tracked.
+- **Daily Challenge** — One deterministic, seeded range per calendar day (same
+  for everyone, every day). Its best score is stored per date.
+- **Trainer** — The original range calculator: live stats (sum, count, average,
+  std-dev), a lazy-loaded sequence chart, presets, favorites, shareable links,
+  and copy-ready code snippets in JavaScript, Python, Java, C++, and the
+  optimized arithmetic-series formula.
 
-![Evolution](https://img.shields.io/badge/Evolution-Live-brightgreen)
-![Phase 2](https://img.shields.io/badge/Phase-2-blue)
-![Score](https://img.shields.io/badge/Score-100%2F100-gold)
+Progress feeds **XP, player levels, and achievements**, viewable on the Stats
+and Achievements pages.
 
-Part of the **60-Repo Evolution Project**.
+## Stack
 
-## 📋 Evolution Status
+React 18 · Vite 6 · TypeScript · Tailwind CSS 4 · Zustand (persisted) ·
+Recharts (lazy-loaded) · Framer Motion · React Router · Vitest.
 
-| Phase | Status | Repos |
-|-------|--------|-------|
-| Phase 1 | ✅ Complete | 01-20 |
-| Phase 2 | 🔄 Active | 21-40 |
-| Phase 3 | ⏳ Pending | 41-60 |
-
-## 🛠️ Tech Stack
-
-- **Framework:** Modern stack
-- **CI/CD:** 24/7 Continuous Evolution
-- **Deployment:** Multi-platform
-
-## 📦 What's Included
-
-- ✅ Professional README
-- ✅ Complete EVOLUTION.md
-- ✅ 5 LinkedIn posts
-- ✅ 2 video scripts  
-- ✅ Podcast script
-- ✅ Architecture docs
-- ✅ API documentation
-- ✅ GitHub Actions workflow
-- ✅ Multi-platform deployment configs
-
-## 🚀 Quick Start
+## Develop
 
 ```bash
-git clone https://github.com/mk-knight23/34-game-sigma-nexus.git
-cd 34-game-sigma-nexus
 npm install
-npm run dev
+npm run dev        # start the dev server
 ```
 
-## 📊 Evolution Metrics
+## Test
 
-| Metric | Score |
-|--------|-------|
-| Documentation | 20/20 |
-| CI/CD | 20/20 |
-| Deployment | 20/20 |
-| Code Quality | 20/20 |
-| Security | 20/20 |
-| **Total** | **100/100** |
-
-## 🌐 Live URLs
-
-| Platform | URL |
-|----------|-----|
-| Vercel | https://34-game-sigma-nexus.vercel.app |
-| Netlify | https://34-game-sigma-nexus.netlify.app |
-| Firebase | https://34-game-sigma-nexus.web.app |
-
-## 📁 Structure
-
-```
-├── .github/workflows/     # CI/CD workflows
-├── marketing/             # Marketing content
-│   ├── linkedin/         # 5 LinkedIn posts
-│   ├── videos/           # 2 video scripts
-│   └── audio/            # Podcast script
-├── docs/                 # Documentation
-│   ├── architecture/     # System design
-│   └── api/              # API docs
-├── vercel.json           # Vercel config
-├── netlify.toml          # Netlify config
-├── firebase.json         # Firebase config
-├── README.md             # This file
-└── EVOLUTION.md          # Evolution history
+```bash
+npm test           # run the Vitest suite once
+npm run test:watch # watch mode
 ```
 
-## 📄 License
+Tests cover the pure logic: range generation and sums (`mathUtils`), export and
+share helpers (`exportUtils`), scoring / seeded daily challenge / XP curves
+(`gameLogic`), and achievement evaluation.
 
-MIT License
+## Build
 
----
+```bash
+npm run build      # tsc -b && vite build  ->  dist/
+npm run preview    # preview the production build
+```
 
-🦾 **Evolved with OpenClaw** | 2026-03-06
+Recharts is code-split via `React.lazy`, so the main bundle stays light and the
+chart chunk only loads when the trainer's visual tab is opened.
 
-## Security
+## Deploy
 
-This project follows security best practices:
-- No hardcoded credentials
-- Dependency scanning enabled
-- Security headers configured
-- Regular security audits performed
+The build emits a static `dist/` with relative asset paths (`base: './'`), so it
+works from any static host or subpath — Vercel, Netlify, GitHub Pages, or any
+file/CDN host. Point the host at `npm run build` with `dist/` as the output
+directory.
