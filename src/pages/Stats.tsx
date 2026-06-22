@@ -1,8 +1,9 @@
-import { useGameStore } from '@/stores/gameStore';
+import { useStatsStore, selectPlayerLevel } from '@/stores/stats';
 import { BarChart3, TrendingUp, Target, Zap } from 'lucide-react';
 
 export default function Stats() {
-  const { scores, gamesPlayed, highScore } = useGameStore();
+  const { scores, gamesPlayed, highScore } = useStatsStore();
+  const playerLevel = useStatsStore(selectPlayerLevel);
 
   const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
 
@@ -40,9 +41,9 @@ export default function Stats() {
         <div className="bg-sigma-card border border-white/10 p-6 rounded-none">
           <div className="flex items-center gap-2 mb-2 text-sigma-primary">
             <Zap size={20} />
-            <span className="text-xs font-mono uppercase tracking-widest">Total Score</span>
+            <span className="text-xs font-mono uppercase tracking-widest">Player Level</span>
           </div>
-          <p className="text-3xl font-display font-black italic text-white">{scores.reduce((a, b) => a + b, 0)}</p>
+          <p className="text-3xl font-display font-black italic text-white">{playerLevel}</p>
         </div>
       </div>
 

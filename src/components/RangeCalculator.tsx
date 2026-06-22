@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useState, useMemo, useEffect, useCallback, lazy, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Settings as SettingsIcon,
@@ -17,22 +17,16 @@ import {
   Share2,
   FunctionSquare
 } from 'lucide-react'
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer,
-  Cell
-} from 'recharts'
 import { useRangeStore } from '@/stores/rangeStore'
 import { calculateRangeStats, LANGUAGES } from '@/utils/mathUtils'
 import { FavoritesPanel } from './FavoritesPanel'
 import { ExportSharePanel } from './ExportSharePanel'
 import { FormulaBuilder } from './FormulaBuilder'
 import { parseRangeFromURL } from '@/utils/exportUtils'
+
+// Recharts is the heaviest dependency in the bundle; lazy-load it so it only
+// ships when the user opens the visual tab.
+const SequenceChart = lazy(() => import('./SequenceChart'))
 
 // Quick preset ranges for common calculations
 const PRESETS = [
@@ -547,31 +541,13 @@ export function RangeCalculator() {
                   className="h-full space-y-8"
                 >
                   <div className="h-[300px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={chartData}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                        <XAxis dataKey="val" hide />
-                        <YAxis hide domain={['auto', 'auto']} />
-                        <Tooltip 
-                          cursor={{ fill: 'rgba(16, 185, 129, 0.05)' }}
-                          content={({ active, payload }) => {
-                            if (active && payload && payload.length) {
-                              return (
-                                <div className="glass px-4 py-2 rounded-xl text-xs font-bold border-range-primary/20">
-                                  Value: {payload[0].value}
-                                </div>
-                              )
-                            }
-                            return null
-                          }}
-                        />
-                        <Bar dataKey="val" radius={[4, 4, 0, 0]}>
-                          {chartData.map((_, index) => (
-                            <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#10b981' : '#3b82f6'} fillOpacity={0.8} />
-                          ))}
-                        </Bar>
-                      </BarChart>
-                    </ResponsiveContainer>
+                    <Suspense fallback={
+                      <div className="h-full w-full flex items-center justify-center text-slate-400 text-xs font-bold uppercase tracking-widest animate-pulse">
+                        Loading chart…
+                      </div>
+                    }>
+                      <SequenceChart data={chartData} />
+                    </Suspense>
                   </div>
                   <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl space-y-4">
                     <h4 className="font-bold flex items-center gap-2"><Info size={16} className="text-range-primary" /> Visual Insights</h4>
