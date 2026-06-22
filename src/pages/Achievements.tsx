@@ -23,10 +23,10 @@ export default function Achievements() {
           return (
             <div
               key={ach.id}
-              className={`bg-sigma-card border p-6 rounded-none transition-all ${
+              className={`glass p-6 rounded-2xl transition-all ${
                 isUnlocked
-                  ? 'border-sigma-primary/50 shadow-[0_0_20px_#f59e0b30]'
-                  : 'border-white/10 opacity-50'
+                  ? 'border-sigma-primary/50 shadow-[0_0_24px_#fbbf2433]'
+                  : 'opacity-50'
               }`}
             >
               <div className="flex items-start gap-4">

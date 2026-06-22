@@ -175,12 +175,12 @@ export function ChallengeMode() {
           <div className="inline-flex p-3 rounded-2xl bg-range-primary/10 text-range-primary">
             <Target size={28} />
           </div>
-          <h3 className="font-display text-2xl font-black">
+          <h3 className="font-display text-2xl font-black uppercase tracking-widest text-stone-100">
             {isOver ? 'Game Over' : 'Guess the Sum'}
           </h3>
           {isOver ? (
             <div className="space-y-1">
-              <p className="text-4xl font-black text-range-primary">{score.toLocaleString()}</p>
+              <p className="font-display text-6xl font-black text-range-primary text-glow">{score.toLocaleString()}</p>
               <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">
                 {correctCount} correct · best streak {bestStreak}
               </p>
@@ -201,7 +201,7 @@ export function ChallengeMode() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <button
             onClick={() => startGame('endless')}
-            className="bg-range-primary hover:bg-range-primary/90 text-white font-black p-5 rounded-2xl shadow-lg shadow-range-primary/20 flex items-center justify-center gap-3 transition-all active:scale-95"
+            className="bg-range-primary hover:bg-range-primary/90 text-black font-black p-5 rounded-2xl shadow-lg shadow-range-primary/30 flex items-center justify-center gap-3 transition-all active:scale-95"
           >
             <Play size={18} /> {isOver ? 'Play Again' : 'Start Challenge'}
           </button>
@@ -257,8 +257,8 @@ export function ChallengeMode() {
           <Timer size={12} /> {timeLeft.toFixed(1)}s · Sum this range
         </p>
         {round && (
-          <p className="font-mono text-3xl md:text-4xl font-black">
-            {round.start} <span className="text-slate-400">→</span> {round.end}
+          <p className="font-mono text-3xl md:text-4xl font-black text-stone-50">
+            {round.start} <span className="text-sigma-primary/60">→</span> {round.end}
             {round.step !== 1 && (
               <span className="text-lg text-range-secondary"> step {round.step}</span>
             )}
@@ -303,11 +303,11 @@ export function ChallengeMode() {
               value={guess}
               onChange={(e) => setGuess(e.target.value)}
               placeholder="Your answer…"
-              className="flex-1 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-range-primary transition-all font-mono text-lg text-center"
+              className="flex-1 bg-black/40 border border-sigma-primary/25 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-range-primary text-stone-100 transition-all font-mono text-lg text-center"
             />
             <button
               type="submit"
-              className="bg-range-primary hover:bg-range-primary/90 text-white font-black px-6 rounded-2xl flex items-center gap-2 transition-all active:scale-95"
+              className="bg-range-primary hover:bg-range-primary/90 text-black font-black px-6 rounded-2xl flex items-center gap-2 transition-all active:scale-95 shadow-[0_0_18px_#fbbf2444]"
             >
               <ChevronRight size={20} />
             </button>

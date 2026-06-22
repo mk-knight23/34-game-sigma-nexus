@@ -230,7 +230,7 @@ export function RangeCalculator() {
                 type="number"
                 value={localRange.start}
                 onChange={e => setLocalRange(prev => ({ ...prev, start: parseFloat(e.target.value) || 0 }))}
-                className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl px-5 py-3 outline-none focus:ring-2 focus:ring-range-primary transition-all font-mono"
+                className="w-full bg-black/40 border border-sigma-primary/20 rounded-2xl px-5 py-3 outline-none focus:ring-2 focus:ring-range-primary text-stone-100 transition-all font-mono"
               />
             </div>
             <div className="space-y-2">
@@ -239,7 +239,7 @@ export function RangeCalculator() {
                 type="number"
                 value={localRange.end}
                 onChange={e => setLocalRange(prev => ({ ...prev, end: parseFloat(e.target.value) || 0 }))}
-                className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl px-5 py-3 outline-none focus:ring-2 focus:ring-range-primary transition-all font-mono"
+                className="w-full bg-black/40 border border-sigma-primary/20 rounded-2xl px-5 py-3 outline-none focus:ring-2 focus:ring-range-primary text-stone-100 transition-all font-mono"
               />
             </div>
             <div className="space-y-2">
@@ -250,14 +250,14 @@ export function RangeCalculator() {
                 min="0.0001"
                 value={localRange.step}
                 onChange={e => setLocalRange(prev => ({ ...prev, step: parseFloat(e.target.value) || 1 }))}
-                className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl px-5 py-3 outline-none focus:ring-2 focus:ring-range-primary transition-all font-mono"
+                className="w-full bg-black/40 border border-sigma-primary/20 rounded-2xl px-5 py-3 outline-none focus:ring-2 focus:ring-range-primary text-stone-100 transition-all font-mono"
               />
             </div>
           </div>
 
           <button
             onClick={handleApply}
-            className="w-full bg-range-primary hover:bg-range-primary/90 text-white font-black p-4 rounded-2xl shadow-lg shadow-range-primary/20 flex items-center justify-center gap-3 transition-all active:scale-95 group relative"
+            className="w-full bg-range-primary hover:bg-range-primary/90 text-black font-black p-4 rounded-2xl shadow-lg shadow-range-primary/30 flex items-center justify-center gap-3 transition-all active:scale-95 group relative"
           >
             <Zap size={18} className="group-hover:animate-pulse" /> 
             CALCULATE RANGE
@@ -395,8 +395,8 @@ export function RangeCalculator() {
                   className={`
                     flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all
                     ${activePanel === tab.id
-                      ? 'bg-white dark:bg-slate-700 text-range-primary shadow-sm'
-                      : 'text-slate-400 hover:text-slate-600'
+                      ? 'bg-sigma-primary/15 text-range-primary'
+                      : 'text-stone-400 hover:text-sigma-primary'
                     }
                   `}
                 >
@@ -501,20 +501,20 @@ export function RangeCalculator() {
             { label: 'Std Dev', val: stats.stdDev.toFixed(2), color: 'text-slate-500' }
           ].map((s, i) => (
             <div key={i} className="glass p-6 rounded-3xl text-center">
-              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">{s.label}</p>
-              <p className={clsx("text-xl font-black truncate", s.color)}>{s.val}</p>
+              <p className="text-[10px] font-black uppercase text-stone-400 tracking-widest mb-1 font-mono">{s.label}</p>
+              <p className={clsx("text-xl font-black truncate font-mono", s.color)}>{s.val}</p>
             </div>
           ))}
         </div>
 
         {/* Workspace */}
-        <div className="glass rounded-[3rem] overflow-hidden flex flex-col min-h-[500px] shadow-2xl">
-          <div className="flex border-b border-slate-100 dark:border-slate-800">
+        <div className="glass-solid rounded-[3rem] overflow-hidden flex flex-col min-h-[500px] shadow-2xl">
+          <div className="flex border-b border-sigma-primary/15">
             <button 
               onClick={() => setActiveTab('visual')}
               className={clsx(
                 "flex-1 p-6 font-black text-xs uppercase tracking-[0.2em] transition-all",
-                activeTab === 'visual' ? "bg-white dark:bg-slate-800 text-range-primary" : "text-slate-400 hover:text-slate-600"
+                activeTab === 'visual' ? "bg-sigma-primary/15 text-range-primary border-b-2 border-sigma-primary" : "text-stone-400 hover:text-sigma-primary"
               )}
             >
               Sequence Visualizer
@@ -523,7 +523,7 @@ export function RangeCalculator() {
               onClick={() => setActiveTab('code')}
               className={clsx(
                 "flex-1 p-6 font-black text-xs uppercase tracking-[0.2em] transition-all",
-                activeTab === 'code' ? "bg-white dark:bg-slate-800 text-range-secondary" : "text-slate-400 hover:text-slate-600"
+                activeTab === 'code' ? "bg-sigma-accent/15 text-range-accent border-b-2 border-sigma-accent" : "text-stone-400 hover:text-sigma-accent"
               )}
             >
               Algorithm Snippets

@@ -17,28 +17,28 @@ export default function Stats() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-sigma-card border border-white/10 p-6 rounded-none">
+        <div className="glass p-6 rounded-2xl">
           <div className="flex items-center gap-2 mb-2 text-sigma-primary">
             <BarChart3 size={20} />
             <span className="text-xs font-mono uppercase tracking-widest">Games</span>
           </div>
           <p className="text-3xl font-display font-black italic text-white">{gamesPlayed}</p>
         </div>
-        <div className="bg-sigma-card border border-white/10 p-6 rounded-none">
+        <div className="glass p-6 rounded-2xl">
           <div className="flex items-center gap-2 mb-2 text-sigma-primary">
             <TrendingUp size={20} />
             <span className="text-xs font-mono uppercase tracking-widest">High Score</span>
           </div>
           <p className="text-3xl font-display font-black italic text-white">{highScore}</p>
         </div>
-        <div className="bg-sigma-card border border-white/10 p-6 rounded-none">
+        <div className="glass p-6 rounded-2xl">
           <div className="flex items-center gap-2 mb-2 text-sigma-primary">
             <Target size={20} />
             <span className="text-xs font-mono uppercase tracking-widest">Average</span>
           </div>
           <p className="text-3xl font-display font-black italic text-white">{avgScore}</p>
         </div>
-        <div className="bg-sigma-card border border-white/10 p-6 rounded-none">
+        <div className="glass p-6 rounded-2xl">
           <div className="flex items-center gap-2 mb-2 text-sigma-primary">
             <Zap size={20} />
             <span className="text-xs font-mono uppercase tracking-widest">Player Level</span>
@@ -47,7 +47,7 @@ export default function Stats() {
         </div>
       </div>
 
-      <div className="bg-sigma-card border border-white/10 p-6 rounded-none">
+      <div className="glass p-6 rounded-2xl">
         <h3 className="text-lg font-display font-black italic text-white uppercase mb-4">Recent Scores</h3>
         {scores.length > 0 ? (
           <div className="space-y-2">

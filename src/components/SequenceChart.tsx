@@ -22,15 +22,15 @@ export default function SequenceChart({ data }: SequenceChartProps) {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(251,191,36,0.12)" />
         <XAxis dataKey="val" hide />
         <YAxis hide domain={['auto', 'auto']} />
         <Tooltip
-          cursor={{ fill: 'rgba(16, 185, 129, 0.05)' }}
+          cursor={{ fill: 'rgba(251, 191, 36, 0.06)' }}
           content={({ active, payload }) => {
             if (active && payload && payload.length) {
               return (
-                <div className="glass px-4 py-2 rounded-xl text-xs font-bold border-range-primary/20">
+                <div className="glass-solid px-4 py-2 rounded-xl text-xs font-bold font-mono text-sigma-primary">
                   Value: {payload[0].value}
                 </div>
               )
@@ -42,8 +42,8 @@ export default function SequenceChart({ data }: SequenceChartProps) {
           {data.map((_, index) => (
             <Cell
               key={`cell-${index}`}
-              fill={index % 2 === 0 ? '#10b981' : '#3b82f6'}
-              fillOpacity={0.8}
+              fill={index % 2 === 0 ? '#fbbf24' : '#fb923c'}
+              fillOpacity={0.85}
             />
           ))}
         </Bar>
